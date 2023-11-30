@@ -1,5 +1,5 @@
 # Hiking-Assistant-Vest
-A capstone project as part of the Computer Engineering undergraduate degree at University of Ottawa. 
+A capstone project undertaken for the Computer Engineering undergraduate degree at the University of Ottawa.
 
 ## Project Description 
 A wearable IoT vest that is designed to enhance the hiking experience for outdoor nature  adventurists on their hiking and camping trails by providing an information hub for essential data that is automatically and manually recorded, for the purposes of: safety regarding the hiker’s personal and surrounding metrics such as altitude above sea level, atmospheric pressure, air quality, oxygen level, fall-detection, temperature/humidity, and step count; as well as for logging all data related to the hiking experience, allowing for saving and/or sharing hiking trail paths and creating logs of geotagged information that is saved automatically by the system and manually by the user; through an interconnected hardware & software system that interacts with a mobile app and the internet that brings together all functionality proposed as part of the vest & app system. 
