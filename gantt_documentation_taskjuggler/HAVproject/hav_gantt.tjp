@@ -1,3 +1,6 @@
+# taskjuggler is a tool for project management. the gantt chart component of the HAV project
+# will be managed using the taskjuggler tool.
+
 project hav "Hiking Assistant Vest (HAV) Project" 2023-09-06 - 2024-04-30 {
 	timezone "Canada/Eastern"
 	timeformat "%Y-%m-%d"
