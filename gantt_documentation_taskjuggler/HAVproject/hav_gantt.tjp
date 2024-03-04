@@ -51,289 +51,340 @@ macro allocate_pm [
 ]
 
 task hav "Hiking Assistant Vest (HAV)" {
-     start ${projectstart}
-     end 2024-04-15
-     complete 45
-     ${allocate_developers}
+    start ${projectstart}
+    end 2024-04-05
+     
 
-     task init "Project Initiation" {
-     	  start ${projectstart}
-	  #duration 42d
-	  #effort 42d
-	  #complete 100
-	  #${allocate_developers}
-	  #precedes !pm.projDocumentationTools
+    task init "Project Initiation" {
+        start ${projectstart}
+        
+        
+        
+            task proposal "Project Proposal" {
+
+                task req "Requirements Research" {
+
+                    task dethw "Determining the hardware to be used" {
+                        end 2023-09-12
+                        ${allocate_developers}		
+
+                    }
+
+                    task detsw "Determining the software to be used" {
+
+                        end 2023-09-12
+                        ${allocate_developers}
+
+                    }
+                }
+
+                task createPropDoc "Creating the project proposal document" {
+					#precedes hav.pm.projDocumentationTools.proposalDocument
+					precedes hav.pm
+                    end 2023-09-08
+                    ${allocate_developers}
+
+                }
+
+                task taskAlloc "Task allocation between project members" {
+
+                    end 2023-09-14
+                    ${allocate_developers}
+
+                }
+
+                task purchaseComponents "Purchasing required hardware components" {
+                    end 2023-10-06
+                    allocate brandon
+                }
+
+                task versionCont "Setting up and configuring version control" {
+                    end 2023-09-14
+                    allocate mobina
+                }
+        }
+    }
+
+	task hwconstr "Hardware Construction" {
+
+		depends !init
+
+		task configurePi "Configuring the RaspberryPi" {
+				depends hav.init.proposal.purchaseComponents
+				end 2023-11-18
+				#precedes hav.pm.projDocumentationTools.midtermPresentation		
+		}
+
+		task configureSensors "Configuring the sensors" {
+			
+			task configLSM6DSOX "Configure LSM6DSOX sensor functionality" {
+				depends hav.init.proposal.purchaseComponents
+				end 2023-11-20
+				precedes hav.pm.projDocumentationTools.finalPresentation
+			}
+
+			task configBME680 "Configure BME680 sensor functionality" {
+				depends hav.init.proposal.purchaseComponents
+				end 2023-11-20
+				precedes hav.pm.projDocumentationTools.finalPresentation
+			}
+			
+		}
+
+		task pedometerConf "Step counter config" {
+			depends hav.init.proposal.purchaseComponents
+			end 2024-03-10
+		}
+
+		task fallDetectConf "Fall Detection Configuration" {
+			depends hav.init.proposal.purchaseComponents
+			end 2024-03-10
+		}
+
+
+		task evalPowerCons "Evaluating power consumption" {
+
+			#start 2023-10-01
+			#end 2023-10-10
+			precedes hav.pm.projDocumentationTools.midtermPresentation
+
+
+		}
+	}
+
+    task swdev "Software Development" {
+     	depends !init
+		#start 2023-11-15
+		end 2024-03-20
+
+     	task uiDesign "UI/UX Design" {
+
+			task ui1 "UI/UX Design V.1" {
+				end 2023-10-17
+			}
+
+			task ui2 "UI/UX Design V.2" {
+				depends !ui1
+				end 2023-10-25
+			}
+
+			task ui3 "UI/UX Design V.3" {
+				depends !ui2
+				end 2023-11-25
+			}
+
+		}
+
+		task dashboardDesign "HAV app Dashboard design" {
+
+			task dashboard1 "Dashboard Design attempt-1" {
+				end 2024-01-14
+			}
+
+		}
+
+		task reactAppDev "React App Development Process" {
+
+			task react1 "React First Implementation" {
+				depends !!dashboardDesign.dashboard1
+				end 2024-01-23
+			}
+
+			task react2 "Reach 2nd Implementation" {
+				depends !react1
+				end 2024-01-30
+			}
+
+			task dashboard2 "React Dashboard Implementation" {
+				depends !!dashboardDesign.dashboard1
+				end 2024-02-13
+			}
+		}
+
+		task finalizeSW "Finalize App Development" {
+			depends !reactAppDev.react2
+			end 2024-03-31
+			precedes hav.pm.projDocumentationTools.finalPresentation2
+		}
+
 	  
-     	  task proposal "Project Proposal" {
-	       task req "Requirements Research" {
-	       	    task dethw "Determining the hardware to be used" {
-		    	 effort 7d
-			 complete 100
-			 ${allocate_developers}			 
-		    }
-		    task detsw "Determining the software to be used" {
-		    	 effort 7d
-			 complete 100
-			 ${allocate_developers}
-		    }
-	       }
+    }
 
-	       task createPropDoc "Creating the project proposal document" {
-	       	    effort 7d
-		    complete 100
-		    ${allocate_developers}
-	       }
+    task hwsw "Hardware Software Integration" {
+     	
+     	task establishConnections "Establish all connections" {
 
-	       task taskAlloc "Task allocation between project members" {
-	       	    effort 1d
-		    complete 100
-		    ${allocate_developers}
-	       }
-
-	       task purchaseComponents "Purchasing required hardware components" {
-	       	    effort 14d
-		    complete 100
-		    allocate brandon
-	       }
-
-	       task versionCont "Setting up and configuring version control" {
-	       	    effort 7d
-		    complete 100
-		    allocate mobina
-	       }
-	  }
-     }
-
-     task hwconstr "Hardware Construction" {
-     	  depends !init
-	  #allocate brandon
-	  #allocate kemal
-     	  task configurePi "Configuring the RaspberryPi" {
-	       effort 2w
-	       complete 100
-	       #precedes !hwconstr.configureSensors
-	  }
-
-	  task configureSensors "Configuring the sensors" {
-	       #effort 2m
-	       ${allocate_hw_dev}
-	       complete 100
-	       task accelerometerConf "Accelerometer" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task o2Conf "O2 Sensor config" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task tempConf "Temperature config" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task altimeterConf "Altimeter config" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task humidityConf "Humidity config" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task airQualConf "Air quality measurement config" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task pedometerConf "Step counter config" {
-	       	    effort 1m
-		    complete 90
-	       }
-	       #task gpsConf "GPS information tracking config" {
-	       #	    effort 
-	       #}
-	  }
-
-	  task debugHW "Debugging the hardware" {
-	       ${allocate_hw_dev}
-	       complete 60
-	       #depends !configurePi
-	       effort 2m
-	       
-	  }
-
-	  task evalPowerCons "Evaluating power consumption" {
-	       allocate brandon
-	       start 2023-10-15
-	       complete 95
-	       effort 2d
-	  }
-     }
-
-     task swdev "Software Development" {
-     	  depends !init
-
-     	  task webAppDev "Web app development" {
-	       
-	       ${allocate_sw_dev}
-	       #precedes !backEndDev
-	       task webAppReqAnalysis "Requirement analysis for the web app" {
-	       	    effort 1d
-		    complete 100
-	       }
-	       task webAppUML "Web app UML use-case modeling" {
-	       	    effort 1w
-		    complete 100
-	       }
-	       task webAppFrontEnd "Development of the front-end" {
+	       	task determineProtocol "Determine communication medium and protocols" {
 	       	    
-	       	    
-	       	    task loginPage "Login page" {
-		    	 effort 1m
-			 complete 90
-		    }
-		    task dashboardPage "Dashboard page" {
-		    	 effort 1m
-			 complete 80
-		    }
-		    task profilePage "Profile page" {
-		    	 effort 2w
-			 complete 70
-		    }
-	       }
-	  }
-
-	  task backEndDev "Back-end development" {
-	       ${allocate_developers}
-	       task dbInitialization "Design and initialize the database" {
-	       	    depends hav.swdev.webAppDev
-		    effort 1m
-		    complete 0
-	       }
-	       task dbIntegration "Integrate database with website" {
-	       	    depends hav.swdev.backEndDev.dbInitialization
-		    effort 2w
-		    complete 0
-	       }
-	  }
-     }
-
-     task hwsw "Hardware Software Integration" {
-     	  #depends !hwconstr,!swdev
-	  ${allocate_hw_dev}
-
-     	  task establishConnections "Establish all connections" {
-
-	       task determineProtocol "Determine communication medium and protocols" {
-	       	    allocate kemal
-		    depends hav.hwconstr.configurePi
-		    effort 2w
-		    complete 100
+		    	depends hav.hwconstr.configurePi
+		    	
 		    
-	       }
-	       task configureConnections "Setup and configure the determined protocols for communication" {
-	       	    allocate kemal
-		    allocate baris
-		    allocate brandon
-		    allocate mobina
-		    depends hav.hwsw.establishConnections.determineProtocol
-		    effort 2m
-		    complete 10
-	       }
+	       	}
+
+	       	task configureConnections "Setup and configure MQTT protocol" {
+	       	
+		    	depends hav.hwsw.establishConnections.determineProtocol
+				precedes hav.pm.projDocumentationTools.finalPresentation
+		    
+	       	}
+
+			task configureBLE "Configure Bluetooth-Low-Energy (BLE)" {
+				start 2023-11-30
+				end 2024-03-10
+			}
+
+
 	       
 	  }
 	  
 	  task debugHWSWIntegration "Debugging the HW/SW Integration" {
 	       depends hav.hwsw.establishConnections
-	       duration 2m
+	       end 2024-03-20
 	  }
-     }
+    }
 
-     task testing "Testing" {
-     	  depends !init
-	  ${allocate_developers}
+    task testing "Testing" {
+     	depends !init
+	  
 
-     	  task sensorAccuracy "Ensure sensor data accuracy" {
-	       duration 6m
-	  }
-	  task testConnections "Test all communication between different hardware and software" {
-	       depends hav.hwsw.debugHWSWIntegration
-	       duration 3m
-	  }
-	  task pilotRun "Pilot run" {
-	       duration 3w
-	       depends !sensorAccuracy, !testConnections
-	  }
+    	task sensorAccuracy "Ensure sensor data accuracy" {
+	    	depends hav.hwconstr.configureSensors
+			#end 2023-10-16
+			precedes hav.pm.projDocumentationTools.finalPresentation
+	  	}
+
+	  	task testConnections "Test all communication between different hardware and software" {
+	       	depends hav.hwsw.debugHWSWIntegration
+			end 2024-03-25
+	       	
+	  	}
+
+		task BLETest "Test BLE Functionality" {
+			depends hav.hwsw
+		}
+	  	
+		
 
      }
      
-     task deploy "Deployment" {
-     	  depends !hwsw
-	  ${allocate_developers}
-     	  task integrateSysNVest "Integrate the HW/SW system with the vest" {
-	       effort 2w
-	  }
-     }
+	task deploy "Deployment" {
+
+		task deployApp "Deploy React App" {
+			depends hav.swdev.finalizeSW
+			
+		}
+
+		task deployHW "Deploy HW" {
+			depends !!testing
+		}
+			
+		task integrateSysNVest "Integrate the HW/SW system with the vest" {
+			depends  hav.hwsw
+		}
+	}
 
      task pm "Project Management and Documentation" {
-     	  start ${projectstart}
-	  ${allocate_developers}
+     	#start ${projectstart}
+	  	#${allocate_developers}
 	  
-     	  task pmTools "Project management tools" {
-	       task generateWBS "Generate the Work Breakdown Schedule (WBS) diagram" {
-	       	    task determineHierarchy "Determining and classifying task hierarchy" {
-		    	 effort 1w
-			 complete 100
-			 start 2023-10-01
-		    }
-	       	    task elaborateToSubtasks "Elaborating each main subtask to further subtasks" {
-		    	 effort 1w
-			 complete 100
-			 start 2023-10-01
-		    }
-	       }
+     	task pmTools "Project management tools" {
+	       	
+			task generateWBS "Generate the Work Breakdown Schedule (WBS) diagram" {
+	       	    
+				task determineHierarchy "Determining and classifying task hierarchy" {
+			 		start 2023-10-01
+					end 2023-10-12
+		    	}
+	       	
+				task elaborateToSubtasks "Elaborating each main subtask to further subtasks" {
+					start 2023-10-01
+					end 2023-10-12
+				
+				}
+	       	}
 
-	       task generateGantt "Generating the Gantt chart" {
-	       	    effort 2d
-		    complete 100
-		    start 2023-10-01
-	       }
+	      	task generateGantt "Generating the Gantt chart" {
+	       	    
+		    	start 2023-10-01
+				end 2023-10-12
+	       	}
 
-	       task generateTrello "Generating the Trello board" {
-	       	    effort 2d
-		    complete 100
+	       	task generateTrello "Generating the Trello board" {
+	       	    
 	       	    start 2023-10-01
-	       }
+				end 2023-10-12
+	       	}
 
 		
-	  }
+	  	}
 
-	  task projDocumentationTools "Project documentation" {
+		task projDocumentationTools "Project documentation" {
 
-	       task proposalDocument "Project proposal document" {
-	       	    start 2023-09-14
-		    end 2023-09-14
-		    #complete 100
-	       }
-	       task midtermPresentation "Midterm presentation (CEG 4912)" {
-	       	    start 2023-10-19
-		    end 2023-10-19
-		    #complete 100
-	       }
-	       task midtermReport "Midterm report (CEG 4912)" {
-	       	    start 2023-10-27
-		    end 2023-10-27
-		    #complete 100
-	       }
-	       task finalPresentation "Final presentation (CEG 4912)" {
-	       	    start 2023-11-30
-		    end 2023-11-30
-	       }
-	       task finalReport "Final report (CEG 4912)" {
-	       	    start 2023-11-30
-		    end 2023-11-30
-	       }
+	    	task proposalDocument "Project proposal document" {
+				
+				end 2023-09-14
+				
+			}
+
+			task midtermPresentation "Midterm presentation (CEG 4912)" {
+
+				start 2023-10-12
+				end 2023-10-19
+				
+
+			}
+	    
+			task midtermReport "Midterm report (CEG 4912)" {
+				
+				start 2023-10-12
+				end 2023-10-27
+			
+			}
+
+	       	task finalPresentation "Final presentation / demo (CEG 4912)" {
+
+	       	    start 2023-11-25
+		   		end 2023-11-30
+
+	       	}
+
+	       	task finalReport "Final report (CEG 4912)" {
+
+	       	    start 2023-11-20
+		    	end 2023-11-30
+
+	       	}
+
+			task midtermPresentation2 "Midterm presentation (CEG 4913)" {
+
+				start 2024-01-31
+				end 2024-02-09
+				#complete 100
+
+			}
+	    
+			task midtermReport2 "Midterm report (CEG 4913)" {
+				
+				start 2024-01-31
+				end 2024-02-26
+			
+			}
+
+			task finalPresentation2 "Final presentation / demo (CEG 4913)" {
+
+	       	    start 2024-04-01
+				#depends hav.deploy
+		   		end 2024-04-05
+
+	       	}
 	  }
      }
 }
 
 taskreport "HAV_project_gantt" {
     formats html
+}
+
+taskreport "HAV_project_gantt_resource"{
+	formats html
 }
