@@ -331,14 +331,15 @@ class HAVTempChar(Characteristic):
         print('Update Temperature')
         if not self.notifying:
             return
-        GObject.timeout_add(5000, self.temp_measure)
+        GLib.timeout_add(5000, self.temp_measure)
         
         
     def temp_measure(self):
         global temp_data
         value = []
-        value.append(dbus.Byte('T'))
-        value.append(temp_data["Data"])
+        #value.append(dbus.Byte('T'))
+        value.append(dbus.Byte(0x06))
+        value.append(dbus.ByteArray(dtemp_data["Data"]))
         print('Updating value: ' + repr(value))
         self.PropertiesChanged(GATT_CHRC_IFACE, { 'Value': value }, [])
         return self.notifying	
@@ -375,14 +376,15 @@ class HAVStepsChar(Characteristic):
         print('Update Steps')
         if not self.notifying:
             return
-        GObject.timeout_add(5000, self.step_measure)
+        GLib.timeout_add(5000, self.step_measure)
         
         
     def step_measure(self):
         global step_data
         value = []
-        value.append(dbus.Byte('S'))
-        value.append(step_data["Data"])
+        #value.append(dbus.Byte('S'))
+        value.append(dbus.Byte(0x06))
+        value.append(dbus.ByteArray(step_data["Data"]))
         print('Updating value: ' + repr(value))
         self.PropertiesChanged(GATT_CHRC_IFACE, { 'Value': value }, [])
         return self.notifying	
@@ -419,14 +421,14 @@ class HAVPresChar(Characteristic):
         print('Update Pressure')
         if not self.notifying:
             return
-        GObject.timeout_add(5000, self.pressure_measure)
+        GLib.timeout_add(5000, self.pressure_measure)
         
         
     def pressure_measure(self):
         global pres_data
         value = []
-        value.append(dbus.Byte('P'))
-        value.append(pres_data["Data"])
+        value.append(dbus.Byte(0x06))
+        value.append(dbus.ByteArray(pres_data["Data"]))
         print('Updating value: ' + repr(value))
         self.PropertiesChanged(GATT_CHRC_IFACE, { 'Value': value }, [])
         return self.notifying	
